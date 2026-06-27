@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prime Impressões | Impressão 3D de Alta Precisão</title>
+  <meta name="description" content="Impressão 3D personalizada para todo o Brasil. Action figures, peças técnicas, protótipos e projetos sob medida com entrega rastreada." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Space Grotesk', 'sans-serif'],
+            body: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            dark: { 950: '#070708', 900: '#0d0d10', 800: '#121214', 700: '#1a1a1f', 600: '#22222a' },
+            blue: { neon: '#00D2FF', mid: '#0099DD', deep: '#0066FF' },
+            orange: { fire: '#FF5100', gold: '#FFB300' },
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    /* ── Reset & Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: #070708;
+      color: #E2E8F0;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* ── Print-bed grid background ───────────────────────────── */
+    .grid-bg {
+      position: relative;
+      overflow: hidden;
+    }
+    .grid-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,210,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,210,255,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+    }
+    .grid-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,102,255,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ── Navbar ──────────────────────────────────────────────── */
+    #navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(7,7,8,0.75);
+      border-bottom: 1px solid rgba(0,210,255,0.08);
+      transition: background 0.3s ease;
+    }
+
+    .nav-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
+      background: linear-gradient(100deg, #00D2FF 0%, #0066FF 45%, #FF5100 80%, #FFB300 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-link {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: #94a3b8;
+      text-decoration: none;
+      position: relative;
+      padding-bottom: 2px;
+      transition: color 0.3s ease;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0;
+      width: 0; height: 1.5px;
+      background: linear-gradient(90deg, #00D2FF, #0066FF);
+      transition: width 0.35s cubic-bezier(0.16,1,0.3,1);
+    }
+    .nav-link:hover { color: #e2e8f0; }
+    .nav-link:hover::after { width: 100%; }
+
+    /* ── Hero brand title ────────────────────────────────────── */
+    .hero-brand {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.0;
+      background: linear-gradient(110deg, #00D2FF 0%, #3399FF 30%, #FF6620 65%, #FFB300 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      background-size: 200% auto;
+      animation: shimmer 4s linear infinite;
+      filter: drop-shadow(0 0 32px rgba(0,210,255,0.25));
+      cursor: default;
+      transition: filter 0.4s ease;
+    }
+    .hero-brand:hover {
+      filter: drop-shadow(0 0 48px rgba(0,210,255,0.55)) drop-shadow(0 0 80px rgba(255,81,0,0.3));
+      animation: shimmer 2s linear infinite;
+    }
+
+    @keyframes shimmer {
+      0%   { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+
+    /* ── Trust badge ─────────────────────────────────────────── */
+    .trust-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.55rem 1.1rem;
+      border-radius: 999px;
+      border: 1px solid rgba(0,210,255,0.3);
+      background: rgba(0,210,255,0.06);
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #a5f3fc;
+      backdrop-filter: blur(8px);
+    }
+
+    /* ── CTA Button – orange pulse ───────────────────────────── */
+    .cta-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 1rem 2.2rem;
+      border-radius: 12px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #0a0a0b;
+      background: linear-gradient(110deg, #FF5100 0%, #FFB300 100%);
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      position: relative;
+      box-shadow: 0 0 0 0 rgba(255,81,0,0.5);
+      animation: ctaPulse 2.5s ease-in-out infinite;
+      transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s ease;
+    }
+    .cta-primary:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 12px 40px rgba(255,81,0,0.45), 0 0 60px rgba(255,179,0,0.25);
+      animation: none;
+    }
+    @keyframes ctaPulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(255,81,0,0.5); }
+      50%      { box-shadow: 0 0 0 14px rgba(255,81,0,0); }
+    }
+
+    /* ── Secondary CTA (blue) ────────────────────────────────── */
+    .cta-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.85rem 1.8rem;
+      border-radius: 10px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #e2e8f0;
+      background: rgba(0,210,255,0.07);
+      border: 1px solid rgba(0,210,255,0.3);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+    .cta-secondary:hover {
+      background: rgba(0,210,255,0.14);
+      border-color: rgba(0,210,255,0.6);
+      box-shadow: 0 0 24px rgba(0,210,255,0.2);
+      transform: translateY(-2px);
+    }
+
+    /* ── Service cards ───────────────────────────────────────── */
+    .service-card {
+      background: rgba(18,18,20,0.85);
+      border: 1px solid rgba(0,210,255,0.1);
+      border-radius: 16px;
+      padding: 2rem 1.8rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(0,210,255,0.07) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .service-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(0,210,255,0.4);
+      box-shadow: 0 0 20px rgba(0,210,255,0.3), 0 20px 40px rgba(0,0,0,0.4);
+    }
+    .service-card:hover::before { opacity: 1; }
+
+    .card-icon {
+      width: 56px; height: 56px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem;
+      margin-bottom: 1.25rem;
+      background: linear-gradient(135deg, rgba(0,210,255,0.15), rgba(0,102,255,0.08));
+      border: 1px solid rgba(0,210,255,0.2);
+      transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+    .service-card:hover .card-icon { transform: scale(1.12) rotate(-4deg); }
+
+    /* ── Process steps ───────────────────────────────────────── */
+    .step-card {
+      background: rgba(18,18,20,0.7);
+      border: 1px solid rgba(255,81,0,0.1);
+      border-radius: 14px;
+      padding: 2rem 1.6rem;
+      position: relative;
+      transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+    .step-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(0,210,255,0.35);
+      box-shadow: 0 0 20px rgba(0,210,255,0.25);
+    }
+    .step-number {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 3rem;
+      line-height: 1;
+      background: linear-gradient(135deg, rgba(0,210,255,0.4), rgba(0,102,255,0.2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    /* ── Section labels ──────────────────────────────────────── */
+    .section-eyebrow {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #00D2FF;
+    }
+    .section-heading {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    /* ── Divider ─────────────────────────────────────────────── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,210,255,0.15) 20%, rgba(0,210,255,0.15) 80%, transparent);
+    }
+
+    /* ── Footer ──────────────────────────────────────────────── */
+    footer {
+      background: #0d0d10;
+      border-top: 1px solid rgba(0,210,255,0.08);
+    }
+    .footer-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      color: #64748b;
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.3s ease;
+    }
+    .footer-link:hover { color: #00D2FF; }
+
+    /* ── Floating WhatsApp button ─────────────────────────────── */
+    #wa-float {
+      position: fixed;
+      bottom: 28px; right: 24px;
+      z-index: 200;
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+      display: flex; align-items: center; justify-content: center;
+      text-decoration: none;
+      color: white;
+      font-size: 1.6rem;
+      box-shadow: 0 4px 20px rgba(37,211,102,0.35);
+      transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s ease;
+    }
+    #wa-float::before {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 2px solid rgba(37,211,102,0.5);
+      animation: waPulse 2s ease-in-out infinite;
+    }
+    #wa-float:hover {
+      transform: scale(1.12);
+      box-shadow: 0 8px 32px rgba(37,211,102,0.55);
+    }
+    @keyframes waPulse {
+      0%,100% { transform: scale(1); opacity: 0.8; }
+      50%      { transform: scale(1.35); opacity: 0; }
+    }
+
+    /* ── Mobile nav toggle ───────────────────────────────────── */
+    #mobile-menu { display: none; }
+    #mobile-menu.open { display: flex; }
+
+    /* ── Scroll reveal ───────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16,1,0.3,1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+  </style>
+</head>
+
+<body>
+
+<!-- ════════════════════════════════════════════
+     NAVBAR
+════════════════════════════════════════════ -->
+<header id="navbar">
+  <nav class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+
+    <!-- Logo -->
+    <a href="#inicio" class="nav-logo tracking-tight">Prime Impressões</a>
+
+    <!-- Desktop nav -->
+    <div class="hidden md:flex items-center gap-8">
+      <a href="#inicio"      class="nav-link">Início</a>
+      <a href="#servicos"    class="nav-link">Serviços</a>
+      <a href="#como-funciona" class="nav-link">Como Funciona</a>
+      <a href="#contato"     class="nav-link">Contato</a>
+      <a href="https://wa.me/qr/UN2GFTY3FZGYL1" target="_blank" rel="noopener noreferrer"
+         class="cta-primary text-sm px-5 py-2.5" style="font-size:0.85rem;">
+        <i class="fab fa-whatsapp"></i> Orçamento
+      </a>
+    </div>
+
+    <!-- Mobile hamburger -->
+    <button id="menu-btn" class="md:hidden text-slate-400 hover:text-white transition-colors" aria-label="Menu">
+      <i class="fas fa-bars text-xl"></i>
+    </button>
+  </nav>
+
+  <!-- Mobile dropdown -->
+  <div id="mobile-menu" class="flex-col gap-1 px-6 pb-5 md:hidden border-t border-white/5">
+    <a href="#inicio"        class="nav-link block py-2.5">Início</a>
+    <a href="#servicos"      class="nav-link block py-2.5">Serviços</a>
+    <a href="#como-funciona" class="nav-link block py-2.5">Como Funciona</a>
+    <a href="#contato"       class="nav-link block py-2.5">Contato</a>
+    <a href="https://wa.me/qr/UN2GFTY3FZGYL1" target="_blank" rel="noopener noreferrer"
+       class="cta-primary mt-2 justify-center" style="font-size:0.9rem;">
+      <i class="fab fa-whatsapp"></i> Orçamento rápido
+    </a>
+  </div>
+</header>
+
+
+<!-- ════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════ -->
+<section id="inicio" class="grid-bg min-h-screen flex items-center pt-24 pb-20 px-6">
+  <div class="max-w-4xl mx-auto w-full text-center relative z-10">
+
+    <!-- Eyebrow -->
+    <p class="section-eyebrow mb-6 reveal">Impressão 3D · Precisão Máxima · Todo o Brasil</p>
+
+    <!-- Brand name -->
+    <h1 class="hero-brand text-5xl sm:text-7xl md:text-8xl mb-8 reveal reveal-delay-1"
+        style="font-size: clamp(2.8rem, 9vw, 6.5rem);">
+      PRIME<br/>IMPRESSÕES
+    </h1>
+
+    <!-- Subheading -->
+    <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed mb-10 reveal reveal-delay-2">
+      Transformando conceitos abstratos em realidade física com a máxima
+      precisão e tecnologia da Impressão 3D.
+    </p>
+
+    <!-- Trust badge -->
+    <div class="flex justify-center mb-10 reveal reveal-delay-2">
+      <span class="trust-badge">
+        <i class="fas fa-box-open text-cyan-400"></i>
+        Atendemos e enviamos encomendas para <strong class="text-white ml-1">TODO O BRASIL</strong>
+        <span class="hidden sm:inline ml-1">com rastreio seguro!</span>
+      </span>
+    </div>
+
+    <!-- CTA -->
+    <div class="flex flex-col sm:flex-row gap-4 justify-center reveal reveal-delay-3">
+      <a href="https://wa.me/qr/UN2GFTY3FZGYL1" target="_blank" rel="noopener noreferrer"
+         class="cta-primary text-base">
+        🚀 FAÇA SEU ORÇAMENTO AGORA
+      </a>
+      <a href="#servicos" class="cta-secondary">
+        Ver Serviços <i class="fas fa-arrow-down text-xs"></i>
+      </a>
+    </div>
+
+    <!-- Decorative bottom fade -->
+    <div class="absolute bottom-0 left-0 right-0 h-24 pointer-events-none"
+         style="background: linear-gradient(to bottom, transparent, #070708);"></div>
+  </div>
+</section>
+
+
+<div class="divider"></div>
+
+
+<!-- ════════════════════════════════════════════
+     SERVICES
+════════════════════════════════════════════ -->
+<section id="servicos" class="py-24 px-6">
+  <div class="max-w-6xl mx-auto">
+
+    <!-- Heading -->
+    <div class="text-center mb-16 reveal">
+      <p class="section-eyebrow mb-3">O Que Fazemos</p>
+      <h2 class="section-heading text-3xl md:text-5xl mb-5">Nossos Serviços</h2>
+      <p class="text-slate-500 max-w-xl mx-auto text-base">
+        Do arquivo ao objeto físico — com acabamento impecável e entrega rastreada.
+      </p>
+    </div>
+
+    <!-- Cards grid -->
+    <div class="grid md:grid-cols-3 gap-6">
+
+      <!-- Card 1 -->
+      <div class="service-card reveal reveal-delay-1">
+        <div class="card-icon">
+          <i class="fas fa-dragon" style="background: linear-gradient(135deg,#00D2FF,#0066FF); -webkit-background-clip:text; -webkit-text-fill-color:transparent;"></i>
+        </div>
+        <h3 class="font-display font-700 text-white text-xl mb-3" style="font-family:'Space Grotesk',sans-serif; font-weight:700;">
+          Impressão 3D Personalizada
+        </h3>
+        <p class="text-slate-400 text-sm leading-relaxed">
+          Action figures, colecionáveis, decoração geek, miniaturas e peças únicas.
+          Se você imaginou, a gente imprime com detalhes que impressionam.
+        </p>
+        <div class="mt-5 flex flex-wrap gap-2">
+          <span class="text-xs px-2.5 py-1 rounded-full border border-cyan-500/20 text-cyan-400/80">Geek & Cultura Pop</span>
+          <span class="text-xs px-2.5 py-1 rounded-full border border-cyan-500/20 text-cyan-400/80">Decoração</span>
+          <span class="text-xs px-2.5 py-1 rounded-full border border-cyan-500/20 text-cyan-400/80">Colecionáveis</span>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="service-card reveal reveal-delay-2">
+        <div class="card-icon">
+          <i class="fas fa-cogs" style="background: linear-gradient(135deg,#FF5100,#FFB300); -webkit-background-clip:text; -webkit-text-fill-color:transparent;"></i>
+        </div>
+        <h3 class="font-display font-700 text-white text-xl mb-3" style="font-family:'Space Grotesk',sans-serif; font-weight:700;">
+          Prototipagem &amp; Peças Técnicas
+        </h3>
+        <p class="text-slate-400 text-sm leading-relaxed">
+          Reposição de peças industriais, componentes funcionais e protótipos
+          de engenharia. Precisão dimensional para aplicações exigentes.
+        </p>
+        <div class="mt-5 flex flex-wrap gap-2">
+          <span class="text-xs px-2.5 py-1 rounded-full border border-orange-500/20 text-orange-400/80">Industrial</span>
+          <span class="text-xs px-2.5 py-1 rounded-full border border-orange-500/20 text-orange-400/80">Engenharia</span>
+          <span class="text-xs px-2.5 py-1 rounded-full border border-orange-500/20 text-orange-400/80">Protótipos</span>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="service-card reveal reveal-delay-3">
+        <div class="card-icon">
+          <i class="fas fa-pencil-ruler" style="background: linear-gradient(135deg,#00D2FF,#FF5100); -webkit-background-clip:text; -webkit-text-fill-color:transparent;"></i>
+        </div>
+        <h3 class="font-display font-700 text-white text-xl mb-3" style="font-family:'Space Grotesk',sans-serif; font-weight:700;">
+          Modelagem &amp; Projetos Sob Medida
+        </h3>
+        <p class="text-slate-400 text-sm leading-relaxed">
+          Envie seu arquivo ou apenas descreva sua ideia. Nossa equipe desenvolve
+          o projeto do zero e entrega o objeto pronto.
+        </p>
+        <div class="mt-5 flex flex-wrap gap-2">
+          <span class="text-xs px-2.5 py-1 rounded-full border border-purple-500/20 text-purple-400/80">Do Zero</span>
+          <span class="text-xs px-2.5 py-1 rounded-full border border-purple-500/20 text-purple-400/80">Arquivo STL/OBJ</span>
+          <span class="text-xs px-2.5 py-1 rounded-full border border-purple-500/20 text-purple-400/80">Criação</span>
+        </div>
+      </div>
+
+    </div><!-- /grid -->
+  </div>
+</section>
+
+
+<div class="divider"></div>
+
+
+<!-- ════════════════════════════════════════════
+     HOW IT WORKS
+════════════════════════════════════════════ -->
+<section id="como-funciona" class="py-24 px-6" style="background: linear-gradient(180deg, #070708 0%, #0d0d10 100%);">
+  <div class="max-w-5xl mx-auto">
+
+    <!-- Heading -->
+    <div class="text-center mb-16 reveal">
+      <p class="section-eyebrow mb-3">Processo Simples</p>
+      <h2 class="section-heading text-3xl md:text-5xl mb-5">Como Funciona</h2>
+      <p class="text-slate-500 max-w-xl mx-auto text-base">
+        Da sua ideia ao objeto em mãos — três passos, sem complicação.
+      </p>
+    </div>
+
+    <!-- Steps -->
+    <div class="grid md:grid-cols-3 gap-6 mb-14">
+
+      <!-- Step 1 -->
+      <div class="step-card reveal reveal-delay-1">
+        <div class="step-number">01</div>
+        <div class="mb-3">
+          <i class="fas fa-paper-plane text-2xl" style="color:#00D2FF;"></i>
+        </div>
+        <h3 class="font-display font-bold text-white text-lg mb-2" style="font-family:'Space Grotesk',sans-serif;">
+          Envie sua Ideia
+        </h3>
+        <p class="text-slate-400 text-sm leading-relaxed">
+          Mande seu arquivo 3D (STL, OBJ), um link de referência ou apenas descreva
+          o que você precisa — pelo WhatsApp mesmo.
+        </p>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-card reveal reveal-delay-2">
+        <div class="step-number">02</div>
+        <div class="mb-3">
+          <i class="fas fa-calculator text-2xl" style="color:#FF8C00;"></i>
+        </div>
+        <h3 class="font-display font-bold text-white text-lg mb-2" style="font-family:'Space Grotesk',sans-serif;">
+          Análise e Orçamento
+        </h3>
+        <p class="text-slate-400 text-sm leading-relaxed">
+          Calculamos o material ideal, o tempo de impressão e te enviamos o melhor
+          preço — com transparência total e sem surpresas.
+        </p>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-card reveal reveal-delay-3">
+        <div class="step-number">03</div>
+        <div class="mb-3">
+          <i class="fas fa-shipping-fast text-2xl" style="color:#00D2FF;"></i>
+        </div>
+        <h3 class="font-display font-bold text-white text-lg mb-2" style="font-family:'Space Grotesk',sans-serif;">
+          Produção e Envio
+        </h3>
+        <p class="text-slate-400 text-sm leading-relaxed">
+          Imprimimos com acabamento impecável e enviamos com rastreio direto
+          para a sua casa — para qualquer canto do Brasil.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Secondary CTA -->
+    <div class="text-center reveal">
+      <a href="https://wa.me/qr/UN2GFTY3FZGYL1" target="_blank" rel="noopener noreferrer"
+         class="cta-primary inline-flex">
+        <i class="fab fa-whatsapp text-xl"></i>
+        Solicitar Cotação Gratuita
+      </a>
+    </div>
+
+  </div>
+</section>
+
+
+<div class="divider"></div>
+
+
+<!-- ════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════ -->
+<footer id="contato" class="py-12 px-6">
+  <div class="max-w-6xl mx-auto">
+
+    <!-- Top footer row -->
+    <div class="flex flex-col md:flex-row items-center justify-between gap-8 mb-8">
+
+      <!-- Brand -->
+      <div>
+        <p class="nav-logo text-lg mb-1">Prime Impressões</p>
+        <p class="text-slate-600 text-xs">Impressão 3D de alta precisão para todo o Brasil.</p>
+      </div>
+
+      <!-- Email -->
+      <a href="mailto:primeimpressao3d@gmail.com" class="footer-link">
+        <i class="fas fa-envelope text-cyan-500/70 text-base"></i>
+        primeimpressao3d@gmail.com
+      </a>
+
+      <!-- Instagram -->
+      <a href="https://instagram.com/primeim_pressao3d" target="_blank" rel="noopener noreferrer"
+         class="footer-link group">
+        <i class="fab fa-instagram text-base transition-colors group-hover:text-pink-400"></i>
+        <span>@primeim_pressao3d</span>
+      </a>
+
+    </div>
+
+    <!-- Divider -->
+    <div class="divider mb-8"></div>
+
+    <!-- Bottom row -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-600 text-xs">
+      <p>© 2026 Prime Impressões. Todos os direitos reservados.</p>
+      <div class="flex items-center gap-1">
+        <i class="fas fa-map-marker-alt text-cyan-600/50 text-xs"></i>
+        <span>Atendimento online · Envio para todo o Brasil</span>
+      </div>
+    </div>
+
+  </div>
+</footer>
+
+
+<!-- ════════════════════════════════════════════
+     FLOATING WHATSAPP BUTTON
+════════════════════════════════════════════ -->
+<a id="wa-float" href="https://wa.me/qr/UN2GFTY3FZGYL1" target="_blank" rel="noopener noreferrer"
+   aria-label="Fale conosco no WhatsApp">
+  <i class="fab fa-whatsapp"></i>
+</a>
+
+
+<!-- ════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════ -->
+<script>
+  // Mobile menu toggle
+  const menuBtn  = document.getElementById('menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('open');
+  });
+  // Close on link click
+  mobileMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => mobileMenu.classList.remove('open'));
+  });
+
+  // Scroll-reveal via IntersectionObserver
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer  = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => observer.observe(el));
+
+  // Navbar background on scroll
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 40) {
+      navbar.style.background = 'rgba(7,7,8,0.92)';
+    } else {
+      navbar.style.background = 'rgba(7,7,8,0.75)';
+    }
+  }, { passive: true });
+</script>
+
+</body>
+</html>
