@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prime Impressões | Impressão 3D de Alta Qualidade</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        cyan: { glow: '#00D2FF' },
+        orange: { glow: '#FF7A00' },
+        base: {
+          950: '#08090D',
+          900: '#0D0F16',
+          850: '#12141C',
+          800: '#181B26',
+        }
+      },
+      fontFamily: {
+        display: ['"Space Grotesk"', 'sans-serif'],
+        sans: ['Inter', 'sans-serif'],
+      },
+      boxShadow: {
+        'glow-cyan': '0 0 25px rgba(0,210,255,0.35)',
+        'glow-orange': '0 0 25px rgba(255,122,0,0.35)',
+      },
+      animation: {
+        'spin-slow': 'spin 18s linear infinite',
+        'spin-slower': 'spin 32s linear infinite reverse',
+        'float': 'float 6s ease-in-out infinite',
+        'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
+        'marquee': 'marquee 22s linear infinite',
+        'draw': 'draw 2.4s ease forwards',
+      },
+      keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-14px)' },
+        },
+        pulseGlow: {
+          '0%, 100%': { opacity: 0.55, filter: 'blur(30px)' },
+          '50%': { opacity: 1, filter: 'blur(45px)' },
+        },
+        marquee: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
+        draw: {
+          '0%': { strokeDashoffset: 1200 },
+          '100%': { strokeDashoffset: 0 },
+        }
+      }
+    }
+  }
+}
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+  body {
+    background-color: #08090D;
+    font-family: 'Inter', sans-serif;
+    background-image:
+      radial-gradient(circle at 15% 10%, rgba(0,210,255,0.09), transparent 40%),
+      radial-gradient(circle at 85% 20%, rgba(255,122,0,0.08), transparent 40%);
+  }
+  .font-display { font-family: 'Space Grotesk', sans-serif; }
+  .text-gradient {
+    background: linear-gradient(90deg, #00D2FF 0%, #7FE9FF 25%, #FF7A00 75%, #FFB366 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .layer-grid {
+    background-image: linear-gradient(rgba(0,210,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,210,255,0.06) 1px, transparent 1px);
+    background-size: 42px 42px;
+    mask-image: radial-gradient(ellipse at center, black 0%, transparent 75%);
+  }
+  .btn-shine::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -75%;
+    width: 50%; height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.35), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.6s ease;
+  }
+  .btn-shine:hover::after { left: 125%; }
+  .glass {
+    background: rgba(18, 20, 28, 0.6);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+  .step-line { background: linear-gradient(180deg, #00D2FF, #FF7A00); }
+  .filament-path {
+    stroke-dasharray: 1200;
+    stroke-dashoffset: 1200;
+    animation: draw 2.6s ease forwards 0.3s;
+  }
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: #08090D; }
+  ::-webkit-scrollbar-thumb { background: linear-gradient(180deg,#00D2FF,#FF7A00); border-radius: 10px; }
+  .card-hover { transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease; }
+  .card-hover:hover { transform: translateY(-6px); }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body class="text-zinc-200 antialiased overflow-x-hidden selection:bg-cyan-glow/30 selection:text-white">
+
+<header class="fixed top-0 inset-x-0 z-50 glass border-b border-white/5">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8 h-16 sm:h-20 flex items-center justify-between">
+    <a href="#topo" class="font-display font-bold text-xl sm:text-2xl tracking-tight">
+      <span class="text-gradient">PRIME</span> <span class="text-white/90">IMPRESSÕES</span>
+    </a>
+    <nav class="hidden md:flex items-center gap-8 font-medium text-sm text-zinc-400">
+      <a href="#diferenciais" class="hover:text-cyan-glow transition-colors">Diferenciais</a>
+      <a href="#como-funciona" class="hover:text-cyan-glow transition-colors">Como Funciona</a>
+      <a href="#orcamento" class="hover:text-cyan-glow transition-colors">Orçamento</a>
+    </nav>
+    <a href="https://wa.me/message/MASOZP3CQGVOK1" target="_blank" rel="noopener"
+       class="relative overflow-hidden btn-shine flex items-center gap-2 bg-gradient-to-r from-orange-glow to-amber-400 text-base-950 font-bold text-sm sm:text-base px-4 sm:px-5 py-2.5 sm:py-3 rounded-full shadow-glow-orange hover:scale-105 active:scale-95 transition-transform">
+      <i data-lucide="message-circle" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+      <span class="hidden sm:inline">Orçamento Rápido</span>
+      <span class="sm:hidden">Orçar</span>
+    </a>
+  </div>
+</header>
+
+<section id="topo" class="relative pt-32 pb-20 sm:pt-40 sm:pb-28 px-5 sm:px-8 overflow-hidden">
+  <div class="absolute inset-0 layer-grid"></div>
+  <div class="absolute -top-24 -left-24 w-72 h-72 bg-cyan-glow rounded-full animate-pulse-glow"></div>
+  <div class="absolute top-1/3 -right-24 w-80 h-80 bg-orange-glow rounded-full animate-pulse-glow" style="animation-delay:1.5s"></div>
+
+  <div class="relative max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+    <div class="text-center lg:text-left">
+      <div class="inline-flex items-center gap-2 rounded-full border border-cyan-glow/30 bg-cyan-glow/5 px-4 py-1.5 text-xs sm:text-sm font-semibold text-cyan-glow mb-6">
+        <span class="w-2 h-2 rounded-full bg-cyan-glow animate-pulse"></span>
+        Impressão 3D sob demanda
+      </div>
+      <h1 class="font-display font-bold text-4xl sm:text-5xl lg:text-6xl leading-[1.08] tracking-tight text-white">
+        Dê Vida às Suas Ideias com
+        <span class="text-gradient block sm:inline"> Impressão 3D</span> de Alta Qualidade
+      </h1>
+      <p class="mt-6 text-base sm:text-lg text-zinc-400 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+        Do protótipo industrial à peça personalizada dos seus sonhos. Criamos qualquer tipo de peça sob demanda e entregamos para todo o mundo.
+      </p>
+      <div class="mt-9 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+        <a href="https://wa.me/message/MASOZP3CQGVOK1" target="_blank" rel="noopener"
+           class="relative overflow-hidden btn-shine flex items-center justify-center gap-3 bg-gradient-to-r from-orange-glow to-amber-400 text-base-950 font-bold text-base px-7 py-4 rounded-full shadow-glow-orange hover:shadow-[0_0_40px_rgba(255,122,0,0.55)] hover:scale-[1.03] active:scale-95 transition-all">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.48A11.79 11.79 0 0 0 12.02 0C5.39 0 .02 5.37.02 12c0 2.12.56 4.18 1.61 6L0 24l6.19-1.62A11.95 11.95 0 0 0 12.02 24C18.65 24 24 18.63 24 12c0-3.2-1.25-6.2-3.48-8.52Z"/></svg>
+          Fazer Orçamento no WhatsApp
+        </a>
+        <a href="https://www.instagram.com/primeim_pressao3d/?hl=en" target="_blank" rel="noopener"
+           class="flex items-center justify-center gap-3 border-2 border-cyan-glow/60 text-cyan-glow font-bold text-base px-7 py-4 rounded-full hover:bg-cyan-glow/10 hover:border-cyan-glow hover:shadow-glow-cyan hover:scale-[1.03] active:scale-95 transition-all">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm6.5-1.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></svg>
+          Ver nosso Instagram
+        </a>
+      </div>
+      <div class="mt-10 flex items-center justify-center lg:justify-start gap-6 text-zinc-500 text-xs sm:text-sm">
+        <div class="flex items-center gap-2"><i data-lucide="shield-check" class="w-4 h-4 text-cyan-glow"></i> Qualidade garantida</div>
+        <div class="flex items-center gap-2"><i data-lucide="globe" class="w-4 h-4 text-orange-glow"></i> Envio mundial</div>
+      </div>
+    </div>
+
+    <div class="relative flex items-center justify-center animate-float">
+      <div class="absolute w-64 h-64 sm:w-80 sm:h-80 rounded-full bg-gradient-to-br from-cyan-glow/20 to-orange-glow/20 blur-3xl"></div>
+      <svg viewBox="0 0 400 400" class="relative w-full max-w-md drop-shadow-[0_0_30px_rgba(0,210,255,0.25)]">
+        <defs>
+          <linearGradient id="meshGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#00D2FF"/>
+            <stop offset="100%" stop-color="#FF7A00"/>
+          </linearGradient>
+        </defs>
+        <g class="animate-spin-slower origin-center" style="transform-origin:200px 200px;">
+          <ellipse cx="200" cy="200" rx="150" ry="60" fill="none" stroke="url(#meshGrad)" stroke-width="1" opacity="0.35"/>
+          <ellipse cx="200" cy="200" rx="150" ry="60" fill="none" stroke="url(#meshGrad)" stroke-width="1" opacity="0.35" transform="rotate(60 200 200)"/>
+          <ellipse cx="200" cy="200" rx="150" ry="60" fill="none" stroke="url(#meshGrad)" stroke-width="1" opacity="0.35" transform="rotate(120 200 200)"/>
+        </g>
+        <g class="animate-spin-slow origin-center" style="transform-origin:200px 200px;">
+          <path class="filament-path" d="M200 60 L320 130 L320 270 L200 340 L80 270 L80 130 Z" fill="none" stroke="url(#meshGrad)" stroke-width="2"/>
+          <path class="filament-path" d="M200 60 L200 200 M320 130 L200 200 M320 270 L200 200 M200 340 L200 200 M80 270 L200 200 M80 130 L200 200" fill="none" stroke="url(#meshGrad)" stroke-width="1.2" opacity="0.7"/>
+        </g>
+        <circle cx="200" cy="200" r="6" fill="#00D2FF">
+          <animate attributeName="r" values="5;9;5" dur="2.5s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="200" cy="60" r="4" fill="#FF7A00"/>
+        <circle cx="320" cy="130" r="4" fill="#00D2FF"/>
+        <circle cx="320" cy="270" r="4" fill="#FF7A00"/>
+        <circle cx="200" cy="340" r="4" fill="#00D2FF"/>
+        <circle cx="80" cy="270" r="4" fill="#FF7A00"/>
+        <circle cx="80" cy="130" r="4" fill="#00D2FF"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section id="diferenciais" class="relative py-20 sm:py-28 px-5 sm:px-8 border-t border-white/5">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <span class="text-orange-glow font-semibold text-sm tracking-widest uppercase">Por que a Prime</span>
+      <h2 class="font-display font-bold text-3xl sm:text-4xl text-white mt-3">Nossos Diferenciais</h2>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+      <div class="card-hover group relative rounded-2xl border border-white/10 bg-base-900/80 p-8 hover:border-cyan-glow/50 hover:shadow-glow-cyan">
+        <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-cyan-glow/20 to-cyan-glow/5 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+          <i data-lucide="sparkles" class="w-7 h-7 text-cyan-glow"></i>
+        </div>
+        <h3 class="font-display font-bold text-xl text-white mb-3">Qualidade Premium</h3>
+        <p class="text-zinc-400 leading-relaxed">Resolução impecável e materiais resistentes, com acabamento de precisão em cada camada impressa.</p>
+      </div>
+      <div class="card-hover group relative rounded-2xl border border-white/10 bg-base-900/80 p-8 hover:border-orange-glow/50 hover:shadow-glow-orange">
+        <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-orange-glow/20 to-orange-glow/5 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+          <i data-lucide="box" class="w-7 h-7 text-orange-glow"></i>
+        </div>
+        <h3 class="font-display font-bold text-xl text-white mb-3">Qualquer Peça</h3>
+        <p class="text-zinc-400 leading-relaxed">Projetos personalizados sob demanda: colecionáveis, peças técnicas, protótipos ou o que você imaginar.</p>
+      </div>
+      <div class="card-hover group relative rounded-2xl border border-white/10 bg-base-900/80 p-8 hover:border-cyan-glow/50 hover:shadow-glow-cyan sm:col-span-2 lg:col-span-1">
+        <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-cyan-glow/20 to-orange-glow/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+          <i data-lucide="rocket" class="w-7 h-7 text-cyan-glow"></i>
+        </div>
+        <h3 class="font-display font-bold text-xl text-white mb-3">Envio Global</h3>
+        <p class="text-zinc-400 leading-relaxed">Entregamos em todos os países com rapidez e segurança, do primeiro contato até a porta da sua casa.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="como-funciona" class="relative py-20 sm:py-28 px-5 sm:px-8 border-t border-white/5 bg-base-900/40">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <span class="text-cyan-glow font-semibold text-sm tracking-widest uppercase">Processo</span>
+      <h2 class="font-display font-bold text-3xl sm:text-4xl text-white mt-3">Como Funciona</h2>
+    </div>
+    <div class="relative grid sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-6">
+      <div class="hidden lg:block absolute top-8 left-[12.5%] right-[12.5%] h-0.5 step-line opacity-40"></div>
+      <div class="relative text-center flex flex-col items-center">
+        <div class="w-16 h-16 rounded-full bg-base-950 border-2 border-cyan-glow flex items-center justify-center font-display font-bold text-xl text-cyan-glow shadow-glow-cyan mb-5 z-10">01</div>
+        <i data-lucide="send" class="w-6 h-6 text-orange-glow mb-3"></i>
+        <h3 class="font-semibold text-white mb-2">Envie sua Ideia</h3>
+        <p class="text-sm text-zinc-400 leading-relaxed">Mande seu arquivo 3D ou referência pelo WhatsApp.</p>
+      </div>
+      <div class="relative text-center flex flex-col items-center">
+        <div class="w-16 h-16 rounded-full bg-base-950 border-2 border-cyan-glow flex items-center justify-center font-display font-bold text-xl text-cyan-glow shadow-glow-cyan mb-5 z-10">02</div>
+        <i data-lucide="palette" class="w-6 h-6 text-orange-glow mb-3"></i>
+        <h3 class="font-semibold text-white mb-2">Escolha os Detalhes</h3>
+        <p class="text-sm text-zinc-400 leading-relaxed">Defina material, cores e o plano ideal para você.</p>
+      </div>
+      <div class="relative text-center flex flex-col items-center">
+        <div class="w-16 h-16 rounded-full bg-base-950 border-2 border-cyan-glow flex items-center justify-center font-display font-bold text-xl text-cyan-glow shadow-glow-cyan mb-5 z-10">03</div>
+        <i data-lucide="printer" class="w-6 h-6 text-orange-glow mb-3"></i>
+        <h3 class="font-semibold text-white mb-2">Imprimimos com Precisão</h3>
+        <p class="text-sm text-zinc-400 leading-relaxed">Cada peça é produzida com precisão milimétrica.</p>
+      </div>
+      <div class="relative text-center flex flex-col items-center">
+        <div class="w-16 h-16 rounded-full bg-base-950 border-2 border-cyan-glow flex items-center justify-center font-display font-bold text-xl text-cyan-glow shadow-glow-cyan mb-5 z-10">04</div>
+        <i data-lucide="package-check" class="w-6 h-6 text-orange-glow mb-3"></i>
+        <h3 class="font-semibold text-white mb-2">Entregamos com Segurança</h3>
+        <p class="text-sm text-zinc-400 leading-relaxed">Enviamos até a sua porta, onde quer que você esteja.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="orcamento" class="relative py-20 sm:py-28 px-5 sm:px-8 border-t border-white/5 overflow-hidden">
+  <div class="absolute inset-0 layer-grid opacity-60"></div>
+  <div class="relative max-w-4xl mx-auto">
+    <div class="relative rounded-3xl border border-white/10 bg-gradient-to-br from-base-900 to-base-850 p-8 sm:p-14 text-center overflow-hidden">
+      <div class="absolute -top-20 -right-20 w-64 h-64 bg-orange-glow/20 rounded-full blur-3xl"></div>
+      <div class="absolute -bottom-20 -left-20 w-64 h-64 bg-cyan-glow/20 rounded-full blur-3xl"></div>
+      <div class="relative">
+        <span class="inline-block text-cyan-glow font-semibold text-sm tracking-widest uppercase mb-3">Orçamento Sob Medida</span>
+        <h2 class="font-display font-bold text-3xl sm:text-4xl text-white mb-5">Seu Projeto, do Seu Jeito</h2>
+        <p class="text-zinc-400 max-w-xl mx-auto leading-relaxed mb-8">
+          Facilitamos o pagamento e criamos planos específicos para hobbistas, empresas e criadores de conteúdo. Conte-nos o que você precisa e monte um orçamento sob medida, sem burocracia.
+        </p>
+        <div class="grid sm:grid-cols-3 gap-4 mb-10 text-left">
+          <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+            <i data-lucide="user" class="w-5 h-5 text-orange-glow mb-2"></i>
+            <p class="text-sm font-semibold text-white">Hobbistas</p>
+            <p class="text-xs text-zinc-500">Peças avulsas e colecionáveis</p>
+          </div>
+          <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+            <i data-lucide="building-2" class="w-5 h-5 text-cyan-glow mb-2"></i>
+            <p class="text-sm font-semibold text-white">Empresas</p>
+            <p class="text-xs text-zinc-500">Protótipos e produção em série</p>
+          </div>
+          <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+            <i data-lucide="video" class="w-5 h-5 text-orange-glow mb-2"></i>
+            <p class="text-sm font-semibold text-white">Criadores</p>
+            <p class="text-xs text-zinc-500">Produtos e itens personalizados</p>
+          </div>
+        </div>
+        <a href="https://wa.me/message/MASOZP3CQGVOK1" target="_blank" rel="noopener"
+           class="relative overflow-hidden btn-shine inline-flex items-center justify-center gap-3 bg-gradient-to-r from-cyan-glow to-orange-glow text-base-950 font-bold text-base sm:text-lg px-9 py-4 sm:py-5 rounded-full shadow-glow-cyan hover:shadow-glow-orange hover:scale-[1.03] active:scale-95 transition-all">
+          <i data-lucide="wand-2" class="w-5 h-5"></i>
+          Montar Meu Projeto Agora
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="relative border-t border-white/5 pt-16 pb-8 px-5 sm:px-8 bg-base-900/60">
+  <div class="max-w-7xl mx-auto grid sm:grid-cols-3 gap-10 mb-12">
+    <div>
+      <span class="font-display font-bold text-2xl">
+        <span class="text-gradient">PRIME</span> <span class="text-white">IMPRESSÕES</span>
+      </span>
+      <p class="text-zinc-500 text-sm mt-4 leading-relaxed max-w-xs">
+        Impressão 3D de alta qualidade, do protótipo à peça dos seus sonhos, entregue em qualquer lugar do mundo.
+      </p>
+    </div>
+    <div>
+      <h4 class="text-white font-semibold mb-4 text-sm tracking-widest uppercase">Navegação</h4>
+      <ul class="space-y-3 text-sm text-zinc-500">
+        <li><a href="#diferenciais" class="hover:text-cyan-glow transition-colors">Diferenciais</a></li>
+        <li><a href="#como-funciona" class="hover:text-cyan-glow transition-colors">Como Funciona</a></li>
+        <li><a href="#orcamento" class="hover:text-cyan-glow transition-colors">Orçamento</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="text-white font-semibold mb-4 text-sm tracking-widest uppercase">Contato</h4>
+      <div class="flex items-center gap-4">
+        <a href="https://wa.me/message/MASOZP3CQGVOK1" target="_blank" rel="noopener"
+           class="w-11 h-11 rounded-full border border-white/10 flex items-center justify-center text-zinc-400 hover:text-cyan-glow hover:border-cyan-glow hover:shadow-glow-cyan transition-all">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.48A11.79 11.79 0 0 0 12.02 0C5.39 0 .02 5.37.02 12c0 2.12.56 4.18 1.61 6L0 24l6.19-1.62A11.95 11.95 0 0 0 12.02 24C18.65 24 24 18.63 24 12c0-3.2-1.25-6.2-3.48-8.52Z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/primeim_pressao3d/?hl=en" target="_blank" rel="noopener"
+           class="w-11 h-11 rounded-full border border-white/10 flex items-center justify-center text-zinc-400 hover:text-orange-glow hover:border-orange-glow hover:shadow-glow-orange transition-all">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm6.5-1.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="max-w-7xl mx-auto pt-8 border-t border-white/5 text-center">
+    <p class="text-zinc-600 text-xs sm:text-sm">© 2026 Prime Impressões. Todos os direitos reservados.</p>
+  </div>
+</footer>
+
+<a href="https://wa.me/message/MASOZP3CQGVOK1" target="_blank" rel="noopener"
+   class="fixed bottom-5 right-5 z-50 md:hidden w-14 h-14 rounded-full bg-gradient-to-br from-orange-glow to-amber-400 flex items-center justify-center shadow-glow-orange active:scale-90 transition-transform">
+  <i data-lucide="message-circle" class="w-6 h-6 text-base-950"></i>
+</a>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>
